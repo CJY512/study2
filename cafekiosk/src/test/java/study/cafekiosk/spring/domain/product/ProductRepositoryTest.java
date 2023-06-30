@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -120,6 +119,63 @@ class ProductRepositoryTest {
                                 tuple("001", "아메리카노", SELLING),
                                 tuple("002", "카페라떼", HOLD)
                         );
+            }
+        }
+    }
+    @Nested
+    @DisplayName("findLatestProductNumber 메소드는")
+    class Describe_findLatestProductNumber {
+
+        @Nested
+        @DisplayName("만약 여러 상품이 주어진다면")
+        class Context_with_various_products {
+
+            @BeforeEach
+            void save() {
+                Product product1 = Product.builder()
+                        .sellingStatus(SELLING)
+                        .productNumber("001")
+                        .type(HANDMADE)
+                        .name("아메리카노")
+                        .price(4000)
+                        .build();
+                Product product2 = Product.builder()
+                        .sellingStatus(HOLD)
+                        .productNumber("002")
+                        .type(HANDMADE)
+                        .name("카페라떼")
+                        .price(4500)
+                        .build();
+                Product product3 = Product.builder()
+                        .sellingStatus(STOP_SELLING)
+                        .productNumber("003")
+                        .type(HANDMADE)
+                        .name("팥빙수")
+                        .price(7000)
+                        .build();
+                productRepository.saveAll(List.of(product1, product2, product3));
+
+            }
+
+            @DisplayName("가장 최근에 등록한 상품 번호를 리턴한다")
+            @Test
+            void it_returns_the_latest_product_number() throws Exception {
+                String latestProductNumber = productRepository.findLatestProductNumber();
+
+                assertThat(latestProductNumber).isEqualTo("003");
+            }
+        }
+        @Nested
+        @DisplayName("만약 등록된 상품이 없다면")
+        class Context_with_empty_repository {
+
+
+            @DisplayName("null을 리턴한다")
+            @Test
+            void it_returns_null() throws Exception {
+                String latestProductNumber = productRepository.findLatestProductNumber();
+
+                assertThat(latestProductNumber).isNull();
             }
         }
     }
