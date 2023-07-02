@@ -1,8 +1,6 @@
 package study.cafekiosk.spring.domain.order;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.cafekiosk.spring.domain.BaseEntity;
 import study.cafekiosk.spring.domain.orderproduct.OrderProduct;
 import study.cafekiosk.spring.domain.product.Product;
@@ -32,8 +30,9 @@ public class Order extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    private Order(List<Product> products, LocalDateTime registeredDateTime) {
-        orderStatus = OrderStatus.INIT;
+    @Builder
+    private Order(OrderStatus orderStatus, List<Product> products, LocalDateTime registeredDateTime) {
+        this.orderStatus = orderStatus;
         totalPrice = calculateTotalPrice(products);
         this.registeredDateTime = registeredDateTime;
         orderProducts = products.stream()
@@ -42,7 +41,11 @@ public class Order extends BaseEntity {
     }
 
     public static Order create(List<Product> products, LocalDateTime registeredDateTime) {
-        return new Order(products, registeredDateTime);
+        return Order.builder()
+                .orderStatus(OrderStatus.INIT)
+                .products(products)
+                .registeredDateTime(registeredDateTime)
+                .build();
     }
 
     private int calculateTotalPrice(List<Product> products) {
