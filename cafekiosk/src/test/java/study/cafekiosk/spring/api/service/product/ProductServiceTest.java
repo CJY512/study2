@@ -14,6 +14,7 @@ import study.cafekiosk.spring.domain.product.Product;
 import study.cafekiosk.spring.domain.product.ProductRepository;
 import study.cafekiosk.spring.domain.product.ProductSellingStatus;
 import study.cafekiosk.spring.domain.product.ProductType;
+import study.cafekiosk.spring.support.IntegrationTestSupport;
 
 import java.util.List;
 
@@ -21,9 +22,8 @@ import static org.assertj.core.api.Assertions.*;
 import static study.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static study.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 
-@ActiveProfiles("test")
-@SpringBootTest
-class ProductServiceTest {
+
+class ProductServiceTest extends IntegrationTestSupport {
 
     @Autowired
     ProductRepository productRepository;
