@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 public class OrderController {
 
     private final OrderService orderService;
-
     @PostMapping("/api/v1/orders/new")
     public ApiResponse<OrderResponse> createOrder(@Validated @RequestBody OrderRequest orderRequest) {
         LocalDateTime registeredDateTime = LocalDateTime.now();
