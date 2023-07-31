@@ -1,14 +1,25 @@
+//queryDSL 추가 시작
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+//queryDSL 추가 끝
+
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.1.0'
-	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.springframework.boot' version '2.7.14'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	//queryDSL 추가 시작
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	//queryDSL 추가 끝
 }
 
 group = 'study'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+	sourceCompatibility = '11'
 }
 
 configurations {
@@ -24,13 +35,43 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+	//끝
+
+	//p6spy
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
+
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//테스트에서 lombok 사용
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝
