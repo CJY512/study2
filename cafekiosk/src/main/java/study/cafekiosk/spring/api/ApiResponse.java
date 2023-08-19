@@ -2,7 +2,6 @@ package study.cafekiosk.spring.api;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import study.cafekiosk.spring.api.service.product.response.ProductResponse;
 
 @Getter
 public class ApiResponse<T> {
