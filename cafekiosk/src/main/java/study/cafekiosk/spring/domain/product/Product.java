@@ -16,7 +16,8 @@ public class Product extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    //unique 제약 조건 자동 생성 시 키 이름이 복잡해서 나중에 직접 생성하는 것이 좋음
+    @Column(unique = true, nullable = false)
     private String productNumber;
 
     @Enumerated(EnumType.STRING)
@@ -25,8 +26,10 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductSellingStatus sellingStatus;
 
+    @Column(nullable = false)
     private String name;
 
+//    @Column(length = )
     private int price;
 
     @Builder
