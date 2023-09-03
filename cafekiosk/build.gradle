@@ -51,6 +51,8 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+// Springdocs 설정 추가 시작
+
 ext { // 전역 변수
     snippetsDir = file('build/generated-snippets')
 }
